@@ -1,27 +1,12 @@
 const mongoose = require('mongoose');
+const { MONGO_URI } = require('./config');
 
 const connectDB = async () => {
   try {
-    let uri = process.env.MONGO_URI || '';
-
-    if (!uri) {
-      for (const key of Object.keys(process.env)) {
-        const match = key.match(/(mongodb(?:\+srv)?:\/\/.+)/);
-        if (match) {
-          uri = match[1];
-          console.log('Recovered URI from malformed env key');
-          break;
-        }
-      }
-    }
-
-    uri = uri.trim().replace(/\n/g, '').replace(/^["']+|["']+$/g, '');
-
-    if (!uri) {
+    if (!MONGO_URI) {
       throw new Error('MONGO_URI environment variable is not set');
     }
-
-    const conn = await mongoose.connect(uri);
+    const conn = await mongoose.connect(MONGO_URI);
     console.log(`MongoDB Connected: ${conn.connection.host}`);
   } catch (error) {
     console.error(`MongoDB Error: ${error.message}`);

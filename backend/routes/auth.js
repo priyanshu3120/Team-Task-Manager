@@ -4,8 +4,9 @@ const { body, validationResult } = require('express-validator');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const { protect } = require('../middleware/auth');
+const { JWT_SECRET } = require('../config/config');
 
-const generateToken = (id) => jwt.sign({ id }, process.env.JWT_SECRET, { expiresIn: '30d' });
+const generateToken = (id) => jwt.sign({ id }, JWT_SECRET, { expiresIn: '30d' });
 
 router.post('/signup', [
   body('name').trim().notEmpty().withMessage('Name is required'),
